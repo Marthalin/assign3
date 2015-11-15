@@ -1,11 +1,12 @@
 //You should implement your assign3 here.
-final int GAME_START = 0;
-final int GAME_RUN = 1;
+final int GAME_START = 0, GAME_RUN = 1;
+final int E1 = 1, E2 = 2, E3 = 3;
 
 PImage bg1,bg2,enemy,fighter,hp,treasure,start2,start1,end1,end2;
 int bgX,treasureX,treasureY;
 int blood;
 int gameState;
+int enemyState;
 final int TOTAL_LIFE = 100;
 int life;
 
@@ -35,7 +36,7 @@ void setup () {
   
   bgX = 0;
   enemyX = 0;
-  enemyY = floor(random(40,180));
+  enemyY = floor(random(40,400));
   fighterX = 580;
   fighterY = 240;
   treasureX = floor(random(20,590));
@@ -43,6 +44,7 @@ void setup () {
   blood = 40;
   life = 20;
   gameState = GAME_START;
+  enemyState = E1;
 }
 
 void draw() {
@@ -67,38 +69,6 @@ void draw() {
     bgX++;
     bgX%=(bg1.width+bg2.width);
     
-    float spacing = enemy.width;
-    enemyX%=4.5*bg1.width;
-    for(int i=0; i<5; i++){
-      float x = enemyX - i*spacing;
-      float y = enemyY;
-    
-      image(enemy,x,y);
-      enemyX=enemyX+0.2;
-    }
-    for(int j=0; j<5; j++){
-      float x = enemyX - j*spacing;
-      float y = enemyY + 0.5*j*spacing;
-      
-      image(enemy,x-1.5*bg1.width,y);
-      enemyX=enemyX+0.2;
-    }
-    for(int i=0; i<5; i++){
-      float x = enemyX - i*spacing;
-      float y = enemyY - abs(2-i)*spacing + 4*spacing;
-      
-      for(int j=0; j<5; j++){
-        float x2 = enemyX - j*spacing;
-        float y2 = enemyY + abs(2-j)*spacing;
-        
-        
-        image(enemy,x-3*bg1.width,y);
-        image(enemy,x2-3*bg1.width,y2);
-        enemyX=enemyX+0.2;
-      }
-    }
-  
-    
     fill(255,0,0);
     rect(30,24,blood,20);
     blood = 2*life;
@@ -107,8 +77,8 @@ void draw() {
     image(treasure,treasureX,treasureY);
     
     image(fighter,fighterX,fighterY);
-      
-      if (upPressed) {
+    
+    if (upPressed) {
         fighterY -= speedY;
       }
       if (downPressed) {
@@ -132,6 +102,60 @@ void draw() {
       }
       if(fighterY < 0){
         fighterY = 0;
+      }
+    
+    float spacing = enemy.width;
+    switch (enemyState){
+      case E1 :
+      enemyX=enemyX+4;
+      if(enemyX<640+5*spacing){
+        for(int i=0; i<5; i++){
+          float x = enemyX - i*spacing;
+          float y = enemyY;
+          image(enemy,x,y);
+        }
+      }else{
+        enemyX = 0;
+        enemyY = random(40,300);
+        enemyState = 2;
+      }
+      break;
+      
+      case E2:
+      enemyX=enemyX+4;
+      if (enemyX < 640 + 5*spacing){
+        for(int j=0; j<5; j++){
+          float x = enemyX - j*spacing;
+          float y = enemyY + 0.5*j*spacing;
+          image(enemy,x,y);
+       }
+       }else{
+          enemyX = 0;
+          enemyY = random(40,250);
+          enemyState = 3;
+       }
+      break;
+      
+      case E3 :
+      enemyX=enemyX+4;
+      if (enemyX < 640 + 5*spacing){
+        for(int i=0; i<5; i++){
+          float x = enemyX - i*spacing;
+          float y = enemyY - abs(2-i)*spacing + 4*spacing;
+          image(enemy,x,y);
+        for(int j=0; j<5; j++){
+          float x2 = enemyX - j*spacing;
+          float y2 = enemyY + abs(2-j)*spacing;
+          image(enemy,x2,y2);
+          }
+        }
+      }else{
+        enemyX = 0;
+        enemyY = random(40,400);
+        enemyState = 1;
+      }
+      break;
+      
       }
     break;
   }
