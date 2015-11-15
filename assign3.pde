@@ -131,7 +131,7 @@ void draw() {
        }
        }else{
           enemyX = 0;
-          enemyY = random(40,250);
+          enemyY = random(40,200);
           enemyState = 3;
        }
       break;
